@@ -3,9 +3,11 @@ package inputTest;
 import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 
-public class Keypad extends javax.swing.JFrame implements ActionListener {
+public class Keypad extends javax.swing.JFrame implements ActionListener, KeyListener {
 	
 	public Keypad() {
 		init();
@@ -49,6 +51,20 @@ public class Keypad extends javax.swing.JFrame implements ActionListener {
 		bb.addActionListener(this);
 		be.addActionListener(this);
 		
+		b0.addKeyListener(this);
+		b1.addKeyListener(this);
+		b2.addKeyListener(this);
+		b3.addKeyListener(this);
+		b4.addKeyListener(this);
+		b5.addKeyListener(this);
+		b6.addKeyListener(this);
+		b7.addKeyListener(this);
+		b8.addKeyListener(this);
+		b9.addKeyListener(this);
+		bd.addKeyListener(this);
+		bb.addKeyListener(this);
+		be.addKeyListener(this);
+
 		pane.add(b7);
 		pane.add(b8);
 		pane.add(b9);
@@ -67,9 +83,14 @@ public class Keypad extends javax.swing.JFrame implements ActionListener {
 		
 		pane.add(be);
 		
+		pane.addKeyListener(this);
 		
 		setSize(180, 210);
-		setVisible(true);				
+		setVisible(true);
+		
+		addKeyListener(this);
+		setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
 	}
 
 	
@@ -79,10 +100,34 @@ public class Keypad extends javax.swing.JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		var label = e.getActionCommand();
+		action(e.getActionCommand());
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			action("Enter");
+		} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			action("<");
+		} else if ("0123456789.".contains(""+e.getKeyChar())) {
+			action(""+e.getKeyChar());
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+	
+	private void action(String label) {
 		var n = value.getText();
 		
-		if (label == ".") {
+		if (label.contentEquals(".")) {
 			if (!n.contains(".")) {
 				n += label;
 				bd.setEnabled(false);
